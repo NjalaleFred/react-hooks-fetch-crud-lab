@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
+import QuestionItem from "./QuestionItem"
 
 function QuestionList() {
   const [question, setQuestion] = useState([])
@@ -9,9 +10,15 @@ function QuestionList() {
     .then(data => setQuestion(data))
   },[])
 
+  function onDeleteQuestion(id){
+    const updatedQuestions = question.filter(quest => quest.id !== id)
+    setQuestion(updatedQuestions)
+  }
+
+
   const allQuestions = question.map(quest => {
     return(
-      <li key={quest.id}> {quest.prompt} </li>
+      <QuestionItem key={quest.id} question={quest} onDeleteQuestion={onDeleteQuestion}  />
     )
   })
 

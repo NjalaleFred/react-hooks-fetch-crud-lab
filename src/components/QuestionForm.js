@@ -1,35 +1,41 @@
 import React, { useState } from "react";
 
-function QuestionForm(OnAddNewQuestion) {
+function QuestionForm({ onAddNewQuestion }) {
   const [formData, setFormData] = useState({
-    prompt: "",
-    answer1: "",
-    answer2: "",
-    answer3: "",
-    answer4: "",
+    prompt: "lorem testum 1",
+    answers: ["choice 1", "choice 2", "choice 3", "choice 4"],
     correctIndex: 0,
   });
-  const [newQuestion, setNewQuestion] = useState("")
 
   function handleChange(event) {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value, dataset } = event.target;
+    if (name === "prompt") {
+      setFormData({
+        ...formData,
+        prompt: value,
+      });
+    } else {
+      const updatedAnswers = [...formData.answers];
+      updatedAnswers[dataset.index] = value;
+      setFormData({
+        ...formData,
+        answers: updatedAnswers,
+      });
+    }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch("http://localhost:4000/questions",{
+    fetch("http://localhost:4000/questions", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     })
-    .then(resp => resp.json())
-    //.then(data => OnAddNewQuestion(data))
-    .then(data => setNewQuestion(data))
+      .then((resp) => resp.json())
+      .then((data) => onAddNewQuestion(data));
+    //.then((data) => setNewQuestion(data));
   }
 
   return (
@@ -50,8 +56,9 @@ function QuestionForm(OnAddNewQuestion) {
           <input
             type="text"
             name="answer1"
-            value={formData.answer1}
+            value={formData.answers[0]}
             onChange={handleChange}
+            data-index={0}
           />
         </label>
         <label>
@@ -59,8 +66,9 @@ function QuestionForm(OnAddNewQuestion) {
           <input
             type="text"
             name="answer2"
-            value={formData.answer2}
+            value={formData.answers[1]}
             onChange={handleChange}
+            data-index={1}
           />
         </label>
         <label>
@@ -68,8 +76,9 @@ function QuestionForm(OnAddNewQuestion) {
           <input
             type="text"
             name="answer3"
-            value={formData.answer3}
+            value={formData.answers[2]}
             onChange={handleChange}
+            data-index={2}
           />
         </label>
         <label>
@@ -77,10 +86,12 @@ function QuestionForm(OnAddNewQuestion) {
           <input
             type="text"
             name="answer4"
-            value={formData.answer4}
+            value={formData.answers[3]}
             onChange={handleChange}
+            data-index={3}
           />
         </label>
+
         <label>
           Correct Answer:
           <select
@@ -88,10 +99,10 @@ function QuestionForm(OnAddNewQuestion) {
             value={formData.correctIndex}
             onChange={handleChange}
           >
-            <option value="0">{formData.answer1}</option>
-            <option value="1">{formData.answer2}</option>
-            <option value="2">{formData.answer3}</option>
-            <option value="3">{formData.answer4}</option>
+            <option value="0">{formData.answers[0]}</option>
+            <option value="1">{formData.answers[1]}</option>
+            <option value="2">{formData.answers[2]}</option>
+            <option value="3">{formData.answers[3]}</option>
           </select>
         </label>
         <button type="submit">Add Question</button>

@@ -7,15 +7,15 @@ function App() {
   const [page, setPage] = useState("List");
  const [newQuestion, setNewQuestion] = useState("")
 
-  // function addNewQuestion(question){
-  //   const updatedQuestions = [...newQuestion, question]
-  //   setNewQuestion(updatedQuestions)
-  // }
+  function addNewQuestion(question){
+    const updatedQuestions = [...newQuestion, question]
+    setNewQuestion(updatedQuestions)
+  }
 
   return (
     <main>
       <AdminNavBar onChangePage={setPage} />
-      {page === "Form" ? <QuestionForm /*OnAddNewQuestion={addNewQuestion}*/ /> : <QuestionList />}
+      {page === "Form" ? <QuestionForm onAddNewQuestion={addNewQuestion} /> : <QuestionList />}
     </main>
   );
 }
